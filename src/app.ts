@@ -7,9 +7,9 @@ import express, {
 } from "express";
 import cors from "cors";
 
-// import router from "./routes";
 import httpStatus from "http-status";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
+import router from "./routes";
 
 const app: Application = express();
 
@@ -25,7 +25,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// app.use("/api", router);
+app.use("/api", router);
 
 app.use(globalErrorHandler);
 app.use((req: Request, res: Response, next: NextFunction) => {

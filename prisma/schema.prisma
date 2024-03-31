@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @unique @default(uuid()) 
+  name String
+  email String 
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  adoptionRequest AdoptionRequest[]
+  @@map("users")
+}
+
+model Pets {
+  id String @id @unique @default(uuid()) 
+  species String
+  breed String 
+  age Int
+  size String
+  location String
+  description String
+  temperament String
+  medicalHistory String
+  adoptionRequirements String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  adoptionRequest AdoptionRequest[]
+}
+
+model AdoptionRequest {
+  id String @id @unique @default(uuid()) 
+  userId String @unique
+  petId String
+  status AdoptionStatus @default(PENDING) //The status of the adoption request (e.g., PENDING, APPROVED, REJECTED). Default PENDING.
+  petOwnershipExperience String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id])
+  pet Pets @relation(fields: [petId], references: [id])
+  @@map("adoptionRequests")
+ 
+}
+
+enum AdoptionStatus{
+  PENDING
+  APPROVED
+  REJECTED
+}
+

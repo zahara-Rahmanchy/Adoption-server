@@ -11,6 +11,21 @@ const insertPetDataService = async (data: any) => {
   return result;
 };
 
+const getPetDataFromDB = async (metaOptions: any) => {
+  console.log(metaOptions);
+  const {limit, page, sortBy, sortOrder} = metaOptions;
+  const result = await prisma.pets.findMany({
+    skip: Number(page - 1) * limit,
+    take: Number(limit),
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+  console.log({result});
+  return result;
+};
+
 export const petServices = {
   insertPetDataService,
+  getPetDataFromDB,
 };

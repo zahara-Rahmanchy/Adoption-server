@@ -11,4 +11,16 @@ router.post(
   adoptionRequestController.insertAdoptionRequests
 );
 
+router.get(
+  "/adoption-requests",
+  auth(),
+  adoptionRequestController.getAdoptionRequests
+);
+
+router.put(
+  "/adoption-requests/:requestId",
+  auth(),
+  adoptionRequestController.updateAdoptionRequests
+);
+
 export const adoptionRequestRoutes = router;

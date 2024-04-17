@@ -4,6 +4,7 @@ import catchAsync from "../../../shared/catchAsync";
 import {Request, Response} from "express";
 import {adoptionServices} from "./adoptionSevices";
 import {request} from "../../../middlewares/auth";
+import prisma from "../../../shared/prisma";
 
 const insertAdoptionRequests = catchAsync(
   async (req: request, res: Response) => {
@@ -22,7 +23,37 @@ const insertAdoptionRequests = catchAsync(
     });
   }
 );
+const getAdoptionRequests = catchAsync(async (req: request, res: Response) => {
+  const result = await adoptionServices.getAdoptionRequestsFromDB();
 
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Adoption requests retrieved successfully",
+    data: result,
+  });
+});
+
+// updating adoption data in the db
+const updateAdoptionRequests = catchAsync(
+  async (req: request, res: Response) => {
+    console.log("user controller:", req.body, "id", req.params);
+
+    const result = await adoptionServices.updateAdoptionRequestsInDB(
+      req.params.requestId,
+      req.body
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Pet profile updated successfully",
+      data: result,
+    });
+  }
+);
 export const adoptionRequestController = {
   insertAdoptionRequests,
+  getAdoptionRequests,
+  updateAdoptionRequests,
 };

@@ -3,8 +3,9 @@ import {userServices} from "./user.service";
 import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
+import {request} from "../../../middlewares/auth";
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
+const createUser = catchAsync(async (req: request, res: Response) => {
   console.log("user controller:", req.body);
 
   const result = await userServices.createUserService(req.body);

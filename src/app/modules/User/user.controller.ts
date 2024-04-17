@@ -29,7 +29,24 @@ const getUsers = catchAsync(async (req: request, res: Response) => {
   });
 });
 
+// updating adoption data in the db
+const updateUserData = catchAsync(async (req: request, res: Response) => {
+  console.log("user controller:", req.body, "id", req);
+
+  const result = await userServices.updateUserDataInDB(
+    String(req.userId),
+    req.body
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User profile updated successfully",
+    data: result,
+  });
+});
 export const userControllers = {
   createUser,
   getUsers,
+  updateUserData,
 };

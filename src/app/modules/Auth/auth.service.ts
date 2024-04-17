@@ -20,6 +20,7 @@ const loginUser = async (payload: {email: string; password: string}) => {
 
   const accessToken = jwt.sign(
     {
+      id: userData.id,
       email: userData.email,
     },
     "bf5d7fc8ed058a939b04798bff7cc85da1c9b5ed8f685b5906af24c6132ede20",

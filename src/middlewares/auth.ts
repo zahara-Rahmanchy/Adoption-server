@@ -5,9 +5,12 @@ import {Secret} from "jsonwebtoken";
 import {jwtHelpers} from "../app/helpers/jwtHelpers";
 import ApiError from "../app/erros/ApiError";
 
+export interface request extends Request {
+  userId?: String;
+}
 const auth = () => {
   // eslint-disable-next-line no-unused-vars
-  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  return catchAsync(async (req: request, res: Response, next: NextFunction) => {
     console.log("headers", req.headers);
     const token = req.headers.authorization;
 
@@ -44,6 +47,7 @@ const auth = () => {
         "You do not have permission to access"
       );
     }
+    req.userId = verifiedUser.id;
     console.log({verifiedUser});
     next();
   });

@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
-import {Prisma} from "@prisma/client";
+import {Pets, Prisma} from "@prisma/client";
 import {petSearchFields, sortByOptions} from "./petConstants";
 
 const insertPetDataService = async (data: any) => {
@@ -87,7 +87,19 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
   return {meta, result};
 };
 
+const updatePetInDB = async (id: string, data: Partial<Pets>) => {
+  const result = await prisma.pets.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  console.log("updated service", {result});
+  return result;
+};
+
 export const petServices = {
   insertPetDataService,
   getPetDataFromDB,
+  updatePetInDB,
 };

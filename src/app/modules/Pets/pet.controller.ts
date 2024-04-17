@@ -34,7 +34,21 @@ const getPetData = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// updating data in the db
+const updatePetData = catchAsync(async (req: Request, res: Response) => {
+  console.log("user controller:", req.body, "id", req.params);
+
+  const result = await petServices.updatePetInDB(req.params.petId, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Pet profile updated successfully",
+    data: result,
+  });
+});
 export const petControllers = {
   insertPetData,
   getPetData,
+  updatePetData,
 };

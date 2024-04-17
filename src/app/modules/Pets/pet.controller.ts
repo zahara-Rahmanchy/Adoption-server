@@ -5,6 +5,7 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import {petServices} from "./pet.service";
 import pick from "../../../shared/pick";
+import {petFilters} from "./petConstants";
 
 const insertPetData = catchAsync(async (req: Request, res: Response) => {
   console.log("user controller:", req.body);
@@ -20,13 +21,15 @@ const insertPetData = catchAsync(async (req: Request, res: Response) => {
 });
 const getPetData = catchAsync(async (req: Request, res: Response) => {
   console.log("user controller:", req.body);
+  const filtersOptions = pick(req.query, petFilters);
   const metaOptions = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-  const result = await petServices.getPetDataFromDB(metaOptions);
-
+  const data = await petServices.getPetDataFromDB(filtersOptions, metaOptions);
+  const {meta, result} = data;
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Pets retrieved successfully",
+    meta,
     data: result,
   });
 });

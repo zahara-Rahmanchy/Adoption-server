@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-const petValidation = z.object({
+const petValidationToInsert = z.object({
   name: z.string({
     required_error: "Name is required",
   }),
@@ -34,5 +34,5 @@ const petValidation = z.object({
 });
 
 export const petValidationSchema = {
-  petValidation,
+  petValidationToInsert,
 };

@@ -15,8 +15,6 @@ const globalErrorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("err statuscode: ", err.statusCode);
-
   const errorResponse: ErrorResponse = {
     success: false,
     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
@@ -37,12 +35,17 @@ const globalErrorHandler: ErrorRequestHandler = (
     errorResponse.errorDetails = {
       issues: errorSources,
     };
-    console.dir(errorSources);
+    // console.dir(errorSources);
   } else if (err instanceof ApiError) {
     console.log({Error});
     errorResponse.statusCode = err.statusCode;
     errorResponse.message = err.message;
     errorResponse.errorDetails = err.error;
+  } else if ((err instanceof Error) as any) {
+    // console.log(err.status);
+    errorResponse.statusCode = err.status;
+    errorResponse.message = err.message;
+    errorResponse.errorDetails = err;
   }
   return res.status(errorResponse.statusCode).json({
     success: false,

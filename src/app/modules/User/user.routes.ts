@@ -17,5 +17,10 @@ router.post(
 router.get("/profile", auth(), userControllers.getUsers);
 
 // route to update user profile using userId from request
-router.put("/profile", auth(), userControllers.updateUserData);
+router.put(
+  "/profile",
+  auth(),
+  validateRequest(userValidationSchema.userUpdateValidation),
+  userControllers.updateUserData
+);
 export const userRoutes = router;

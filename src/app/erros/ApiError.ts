@@ -1,6 +1,7 @@
 class ApiError extends Error {
   //   statusCode: number;
   error: string;
+  statusCode: number;
   constructor(
     statusCode: number,
     message: string | undefined,
@@ -8,8 +9,7 @@ class ApiError extends Error {
     error: string
   ) {
     super(message);
-    console.log("this error: ", this);
-    // this.statusCode = statusCode;
+    this.statusCode = statusCode;
     this.error = error;
     if (stack) {
       this.stack = stack;

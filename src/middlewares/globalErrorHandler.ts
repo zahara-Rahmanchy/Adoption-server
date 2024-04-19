@@ -8,7 +8,7 @@ type ErrorResponse = {
   message: string;
   errorDetails: any;
 };
-
+// handling errors
 const globalErrorHandler: ErrorRequestHandler = (
   err: any,
   req: Request,

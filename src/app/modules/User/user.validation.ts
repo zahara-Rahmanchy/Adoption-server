@@ -13,10 +13,12 @@ const userValidation = z.object({
 });
 
 const userUpdateValidation = z.object({
-  body: z.object({
-    name: z.string().optional(),
-    email: z.string().email().optional(),
-  }),
+  body: z
+    .object({
+      name: z.string().optional(),
+      email: z.string().email().optional(),
+    })
+    .strict(),
 });
 
 export const userValidationSchema = {

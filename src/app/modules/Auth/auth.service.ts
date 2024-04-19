@@ -1,8 +1,11 @@
 // import {jwtHelpers} from "../../../helpars/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from "bcrypt";
-import jwt, {JwtPayload} from "jsonwebtoken";
 
+import jwt, {JwtPayload, Secret} from "jsonwebtoken";
+
+/* while logging first comparing the passwords and then using jwt to generate token
+to ensure that only logged users can access informations*/
 const loginUser = async (payload: {email: string; password: string}) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
@@ -16,17 +19,16 @@ const loginUser = async (payload: {email: string; password: string}) => {
   if (!isCorrectPassword) {
     throw new Error("Password incorrect!");
   }
-  console.log({isCorrectPassword});
 
   const accessToken = jwt.sign(
     {
       id: userData.id,
       email: userData.email,
     },
-    "bf5d7fc8ed058a939b04798bff7cc85da1c9b5ed8f685b5906af24c6132ede20",
+    process.env.JWT_SECRET as Secret,
     {
       algorithm: "HS256",
-      expiresIn: "15 days",
+      expiresIn: process.env.EXPIRES_In as string,
     }
   );
   console.log({accessToken}, {userData});

@@ -9,16 +9,15 @@ const adoptionRequestsValidation = z.object({
 });
 
 const updateAdoptionStatus = z.object({
-  body: z.object({
-    status: z
-      .enum([
+  body: z
+    .object({
+      status: z.enum([
         AdoptionStatus.APPROVED,
         AdoptionStatus.PENDING,
         AdoptionStatus.REJECTED,
-      ])
-      .optional(),
-    petOwnershipExperience: z.string().optional(),
-  }),
+      ]),
+    })
+    .strict(),
 });
 
 export const adoptionRequestsValidationSchema = {

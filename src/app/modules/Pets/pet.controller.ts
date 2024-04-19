@@ -8,6 +8,7 @@ import pick from "../../../shared/pick";
 import {petFilters} from "./petConstants";
 import {request} from "../../../middlewares/auth";
 
+// insert pet data to database
 const insertPetData = catchAsync(async (req: request, res: Response) => {
   console.log("user controller:", req.body);
 
@@ -20,6 +21,12 @@ const insertPetData = catchAsync(async (req: request, res: Response) => {
     data: result,
   });
 });
+
+/* 
+get pet data from database, here searching is implemented on specfic fields
+also filtering and meta options are also used to fetch data
+*/
+
 const getPetData = catchAsync(async (req: request, res: Response) => {
   console.log("user controller:", req.body);
   const filtersOptions = pick(req.query, petFilters);
@@ -35,7 +42,7 @@ const getPetData = catchAsync(async (req: request, res: Response) => {
   });
 });
 
-// updating data in the db
+// updating data in the db based on petId
 const updatePetData = catchAsync(async (req: request, res: Response) => {
   console.log("user controller:", req.body, "id", req.params);
 

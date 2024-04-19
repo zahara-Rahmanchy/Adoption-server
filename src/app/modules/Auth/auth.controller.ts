@@ -4,7 +4,7 @@ import {AuthServices} from "./auth.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import {request} from "../../../middlewares/auth";
-
+// logging user based on the user credentials
 const loginUser = catchAsync(async (req: request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
   console.log({result});
@@ -16,24 +16,6 @@ const loginUser = catchAsync(async (req: request, res: Response) => {
   });
 });
 
-// const refreshToken = catchAsync(async (req: Request, res: Response) => {
-//   const {refreshToken} = req.cookies;
-
-//   const result = await AuthServices.refreshToken(refreshToken);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Logged in successfully!",
-//     data: result,
-//     // data: {
-//     //     accessToken: result.accessToken,
-//     //     needPasswordChange: result.needPasswordChange
-//     // }
-//   });
-// });
-
 export const AuthController = {
   loginUser,
-  // refreshToken
 };

@@ -8,6 +8,10 @@ import ApiError from "../app/erros/ApiError";
 export interface request extends Request {
   userId?: String;
 }
+/**
+ * verifies the user based on the token
+ *
+ */
 const auth = () => {
   // eslint-disable-next-line no-unused-vars
   return catchAsync(async (req: request, res: Response, next: NextFunction) => {
@@ -15,28 +19,18 @@ const auth = () => {
     const token = req.headers.authorization;
 
     // check if the token is not available
-    // if (!token) {
-    //   throw new UNAUTHORIZEDError(
-    //     httpStatus.UNAUTHORIZED,
-    //     "Unauthorized Access",
-    //     "You do not have the necessary permissions to access this resource.",
-    //     "",
-    //     ""
-    //   );
-    // }
 
     if (!token) {
-      // throw new Error("Unauthorized Access");
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
         "Unauthorized Access",
         "",
-        "You do not have permission to access"
+        "You do not have permission to access this information"
       );
     }
     const verifiedUser = jwtHelpers.verifyToken(
       token,
-      "bf5d7fc8ed058a939b04798bff7cc85da1c9b5ed8f685b5906af24c6132ede20" as Secret
+      process.env.JWT_SECRET as Secret
     );
     const {exp} = verifiedUser;
     if (Math.floor(Date.now() / 1000) >= Number(verifiedUser?.exp)) {

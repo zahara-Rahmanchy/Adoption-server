@@ -1,7 +1,10 @@
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import {Prisma, User} from "@prisma/client";
-
+/**
+ *
+ * registers user data to the database, password is hashed and then sent to the db
+ */
 const createUserService = async (data: any) => {
   const hashedPassword: string = await bcrypt.hash(String(data.password), 12);
 
@@ -26,6 +29,9 @@ const createUserService = async (data: any) => {
   return result;
 };
 
+/***
+ * retrieves all the user data from the database
+ */
 const getUsersFromDB = async () => {
   const result = await prisma.user.findMany({
     select: {
@@ -40,7 +46,10 @@ const getUsersFromDB = async () => {
 
   return result;
 };
-
+/**
+ *
+ *updates user data such as name and email in the db and this is ensured using zod
+ */
 const updateUserDataInDB = async (id: string, data: Partial<User>) => {
   const result = await prisma.user.update({
     where: {

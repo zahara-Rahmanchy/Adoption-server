@@ -3,6 +3,7 @@ import prisma from "../../../shared/prisma";
 import {Pets, Prisma} from "@prisma/client";
 import {petSearchFields, sortByOptions} from "./petConstants";
 
+// creates pet data in the database
 const insertPetDataService = async (data: any) => {
   console.log("data: ", data, "\n");
 
@@ -13,6 +14,8 @@ const insertPetDataService = async (data: any) => {
   return result;
 };
 
+// gets pet data based on the searchTerm, filter options and also meta options
+// shows total data fetched as well
 const getPetDataFromDB = async (params: any, metaOptions: any) => {
   console.log(metaOptions);
   const {limit, page, sortBy, sortOrder} = metaOptions;
@@ -87,6 +90,7 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
   return {meta, result};
 };
 
+// updated pet data based on the peId
 const updatePetInDB = async (id: string, data: Partial<Pets>) => {
   const result = await prisma.pets.update({
     where: {

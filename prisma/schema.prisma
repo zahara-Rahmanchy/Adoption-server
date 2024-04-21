@@ -30,7 +30,7 @@ model Pets {
   species String
   breed String 
   age Int
-  size String
+  size petSize
   location String
   description String
   temperament String
@@ -53,6 +53,12 @@ model AdoptionRequest {
   pet Pets @relation(fields: [petId], references: [id])
   @@map("adoptionRequests")
  
+}
+
+enum petSize{
+  Small
+  Medium
+  Large
 }
 
 enum AdoptionStatus{

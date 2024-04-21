@@ -1,5 +1,5 @@
+import {petSize} from "@prisma/client";
 import {z} from "zod";
-
 // validation schema for inserting pet data
 const petValidationToInsert = z.object({
   name: z.string({
@@ -14,9 +14,7 @@ const petValidationToInsert = z.object({
   age: z.number({
     required_error: "Age is required",
   }),
-  size: z.string({
-    required_error: "Size is required",
-  }),
+  size: z.enum([petSize.Large, petSize.Medium, petSize.Small]),
   location: z.string({
     required_error: "Location is required",
   }),
@@ -57,11 +55,7 @@ const petValidationToUpdate = z.object({
           required_error: "Age is required",
         })
         .optional(),
-      size: z
-        .string({
-          required_error: "Size is required",
-        })
-        .optional(),
+      size: z.enum([petSize.Large, petSize.Medium, petSize.Small]).optional(),
       location: z
         .string({
           required_error: "Location is required",

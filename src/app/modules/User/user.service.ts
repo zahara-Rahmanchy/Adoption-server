@@ -32,8 +32,11 @@ const createUserService = async (data: any) => {
 /***
  * retrieves all the user data from the database
  */
-const getUsersFromDB = async () => {
-  const result = await prisma.user.findMany({
+const getUsersFromDB = async (userId: string) => {
+  const result = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
     select: {
       id: true,
       name: true,

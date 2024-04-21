@@ -6,9 +6,7 @@ const userValidation = zod_1.z.object({
     name: zod_1.z.string({
         required_error: "Name field is required",
     }),
-    email: zod_1.z
-        .string({ required_error: "Email must be a valid email address" })
-        .email(),
+    email: zod_1.z.string({ required_error: "Email must be a valid email address" }),
     password: zod_1.z.string({
         required_error: "Password field is required",
     }),

@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "petSize" AS ENUM ('Small', 'Medium', 'Large');
+
+-- CreateEnum
 CREATE TYPE "AdoptionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateTable
@@ -20,7 +23,7 @@ CREATE TABLE "Pets" (
     "species" TEXT NOT NULL,
     "breed" TEXT NOT NULL,
     "age" INTEGER NOT NULL,
-    "size" TEXT NOT NULL,
+    "size" "petSize" NOT NULL,
     "location" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "temperament" TEXT NOT NULL,

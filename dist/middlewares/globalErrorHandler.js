@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_status_1 = __importDefault(require("http-status"));
 const zod_1 = require("zod");
 const ApiError_1 = __importDefault(require("../app/erros/ApiError"));
+// handling errors
 const globalErrorHandler = (err, req, res, next) => {
     const errorResponse = {
         success: false,

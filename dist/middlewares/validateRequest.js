@@ -12,12 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // this is used as a middleware to validate the req body according to zod schema
 const validateRequest = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield schema.parseAsync({
-            body: req.body,
-        });
+        console.log(req.body);
+        if ("body" in schema.shape) {
+            const result = yield schema.parseAsync({ body: req.body });
+        }
+        else {
+            const result = yield schema.parseAsync(req.body);
+            console.log({ result });
+        }
         next();
     }
     catch (err) {
+        console.log(err);
         next(err);
     }
 });

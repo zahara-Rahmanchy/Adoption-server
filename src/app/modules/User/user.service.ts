@@ -1,11 +1,26 @@
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import {Prisma, User} from "@prisma/client";
+import ApiError from "../../erros/ApiError";
+import httpStatus from "http-status";
 /**
  *
  * registers user data to the database, password is hashed and then sent to the db
  */
 const createUserService = async (data: any) => {
+  const isUserPresent = await prisma.user.findUnique({
+    where: {
+      email: data.email,
+    },
+  });
+  if (isUserPresent) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "User already exits",
+      "",
+      "A user is already registered with the email."
+    );
+  }
   const hashedPassword: string = await bcrypt.hash(String(data.password), 12);
 
   console.log("data: ", data, "\n", {hashedPassword});

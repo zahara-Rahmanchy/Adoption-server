@@ -48,14 +48,18 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
   }
 
   if (Object.keys(filtersOptions).length > 0) {
+    if ("age" in filtersOptions) {
+      filtersOptions.age = Number(filtersOptions.age);
+      console.log("got age", filtersOptions.age, filtersOptions);
+    }
     andConditions.push({
       AND: Object.keys(filtersOptions).map(field => ({
         [field]: {
-          equals:
-            field === "age"
-              ? Number(filtersOptions[field])
-              : filtersOptions[field],
-          mode: "insensitive",
+          equals: filtersOptions[field],
+          mode:
+            typeof filtersOptions[field] == "string"
+              ? "insensitive"
+              : undefined,
         },
       })),
     });

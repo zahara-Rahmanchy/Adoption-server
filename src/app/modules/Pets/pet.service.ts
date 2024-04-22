@@ -2,13 +2,20 @@ import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import {Pets, Prisma} from "@prisma/client";
 import {petSearchFields, sortByOptions} from "./petConstants";
+import {capitalize} from "./capitalize";
 
 // creates pet data in the database
 const insertPetDataService = async (data: any) => {
   console.log("data: ", data, "\n");
-
+  const {species, breed, ...rest} = data;
+  console.log("species: ", species, "breed: ", breed);
+  console.log("species: ", capitalize(species), "breed: ", capitalize(breed));
   const result = await prisma.pets.create({
-    data: data,
+    data: {
+      ...rest,
+      species: capitalize(species),
+      breed: capitalize(breed),
+    },
   });
   console.log({result});
   return result;
@@ -67,6 +74,7 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
             [validOptions]: "desc",
           },
   });
+  console.log(validOptions.toString().toLowerCase());
   const total = await prisma.pets.count({
     skip: page && limit ? Number(page - 1) * limit : Number(1 - 1) * 10,
     take: limit ? Number(limit) : 10,

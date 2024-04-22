@@ -26,11 +26,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.petServices = void 0;
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const petConstants_1 = require("./petConstants");
+const capitalize_1 = require("./capitalize");
 // creates pet data in the database
 const insertPetDataService = (data) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("data: ", data, "\n");
+    const { species, breed } = data, rest = __rest(data, ["species", "breed"]);
+    console.log("species: ", species, "breed: ", breed);
+    console.log("species: ", (0, capitalize_1.capitalize)(species), "breed: ", (0, capitalize_1.capitalize)(breed));
     const result = yield prisma_1.default.pets.create({
-        data: data,
+        data: Object.assign(Object.assign({}, rest), { species: (0, capitalize_1.capitalize)(species), breed: (0, capitalize_1.capitalize)(breed) }),
     });
     console.log({ result });
     return result;
@@ -81,6 +85,7 @@ const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void
                 [validOptions]: "desc",
             },
     });
+    console.log(validOptions.toString().toLowerCase());
     const total = yield prisma_1.default.pets.count({
         skip: page && limit ? Number(page - 1) * limit : Number(1 - 1) * 10,
         take: limit ? Number(limit) : 10,

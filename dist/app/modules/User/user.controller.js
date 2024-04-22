@@ -30,7 +30,7 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 // gets all the user information
 const getUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_service_1.userServices.getUsersFromDB();
+    const result = yield user_service_1.userServices.getUsersFromDB(String(req.userId));
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,

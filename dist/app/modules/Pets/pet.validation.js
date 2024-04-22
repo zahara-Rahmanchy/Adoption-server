@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.petValidationSchema = void 0;
+const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 // validation schema for inserting pet data
 const petValidationToInsert = zod_1.z.object({
@@ -16,9 +17,7 @@ const petValidationToInsert = zod_1.z.object({
     age: zod_1.z.number({
         required_error: "Age is required",
     }),
-    size: zod_1.z.string({
-        required_error: "Size is required",
-    }),
+    size: zod_1.z.enum([client_1.petSize.Large, client_1.petSize.Medium, client_1.petSize.Small]),
     location: zod_1.z.string({
         required_error: "Location is required",
     }),
@@ -59,11 +58,7 @@ const petValidationToUpdate = zod_1.z.object({
             required_error: "Age is required",
         })
             .optional(),
-        size: zod_1.z
-            .string({
-            required_error: "Size is required",
-        })
-            .optional(),
+        size: zod_1.z.enum([client_1.petSize.Large, client_1.petSize.Medium, client_1.petSize.Small]).optional(),
         location: zod_1.z
             .string({
             required_error: "Location is required",

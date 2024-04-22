@@ -66,8 +66,11 @@ const createUserService = (data) => __awaiter(void 0, void 0, void 0, function* 
 /***
  * retrieves all the user data from the database
  */
-const getUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.user.findMany({
+const getUsersFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+        },
         select: {
             id: true,
             name: true,

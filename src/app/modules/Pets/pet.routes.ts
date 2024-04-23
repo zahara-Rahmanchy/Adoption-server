@@ -20,7 +20,7 @@ router.post(
 get route to get pet data,here  auth is used to authenticate user so that only 
 valid users can access the data
 */
-router.get("/pets", auth(), petControllers.getPetData);
+router.get("/pets", petControllers.getPetData);
 
 /*
     put route to update pet data,here first auth is used to authenticate user 

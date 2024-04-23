@@ -38,11 +38,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userServices = void 0;
 const bcrypt = __importStar(require("bcrypt"));
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
+const ApiError_1 = __importDefault(require("../../erros/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 /**
  *
  * registers user data to the database, password is hashed and then sent to the db
  */
 const createUserService = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUserPresent = yield prisma_1.default.user.findUnique({
+        where: {
+            email: data.email,
+        },
+    });
+    if (isUserPresent) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "User already exits", "", "A user is already registered with the email.");
+    }
     const hashedPassword = yield bcrypt.hash(String(data.password), 12);
     console.log("data: ", data, "\n", { hashedPassword });
     const userData = {

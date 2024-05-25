@@ -18,6 +18,7 @@ model User {
   name String
   email String  @unique
   password String
+  role userRoles @default(User)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   adoptionRequest AdoptionRequest[]
@@ -27,6 +28,7 @@ model User {
 model Pets {
   id String @id @unique @default(uuid()) 
   name String
+  image String @default("https://img.freepik.com/free-photo/selective-focus-shot-pumpkins-ground-with-cute-golden-retriever-puppy_181624-18051.jpg?t=st=1716532062~exp=1716535662~hmac=4fcefcb710bf5440b12b26794814dd92151712ac48f69ba7493c11cd17ba09e1&w=996")
   species String
   breed String 
   age Int
@@ -40,7 +42,11 @@ model Pets {
   updatedAt DateTime @updatedAt
   adoptionRequest AdoptionRequest[]
 }
-
+enum userRoles{
+  User
+  Admin
+ 
+}
 model AdoptionRequest {
   id String @id @unique @default(uuid()) 
   userId String @unique

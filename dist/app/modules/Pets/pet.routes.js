@@ -19,7 +19,7 @@ router.post("/pets", (0, auth_1.default)(), (0, validateRequest_1.default)(pet_v
 get route to get pet data,here  auth is used to authenticate user so that only
 valid users can access the data
 */
-router.get("/pets", (0, auth_1.default)(), pet_controller_1.petControllers.getPetData);
+router.get("/pets", pet_controller_1.petControllers.getPetData);
 /*
     put route to update pet data,here first auth is used to authenticate user
     and then req body is validated using zod schema to ensure the valid fields

@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userServices = void 0;
 const bcrypt = __importStar(require("bcrypt"));
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
+const client_1 = require("@prisma/client");
 const ApiError_1 = __importDefault(require("../../erros/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
 /**
@@ -45,6 +46,7 @@ const http_status_1 = __importDefault(require("http-status"));
  * registers user data to the database, password is hashed and then sent to the db
  */
 const createUserService = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("data:", data);
     const isUserPresent = yield prisma_1.default.user.findUnique({
         where: {
             email: data.email,
@@ -59,6 +61,7 @@ const createUserService = (data) => __awaiter(void 0, void 0, void 0, function* 
         name: data.name,
         email: data.email,
         password: hashedPassword,
+        role: client_1.userRoles.User,
     };
     const result = yield prisma_1.default.user.create({
         data: userData,

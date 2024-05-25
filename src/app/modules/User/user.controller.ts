@@ -7,7 +7,7 @@ import {request} from "../../../middlewares/auth";
 
 // creates user in the database
 const createUser = catchAsync(async (req: request, res: Response) => {
-  console.log("user controller:", req.body);
+  console.log("user controller:", req);
 
   const result = await userServices.createUserService(req.body);
 

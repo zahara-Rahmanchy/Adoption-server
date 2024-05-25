@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
-import {Prisma, User} from "@prisma/client";
+import {Prisma, User, userRoles} from "@prisma/client";
 import ApiError from "../../erros/ApiError";
 import httpStatus from "http-status";
 /**
@@ -8,6 +8,7 @@ import httpStatus from "http-status";
  * registers user data to the database, password is hashed and then sent to the db
  */
 const createUserService = async (data: any) => {
+  console.log("data:", data);
   const isUserPresent = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -28,6 +29,7 @@ const createUserService = async (data: any) => {
     name: data.name,
     email: data.email,
     password: hashedPassword,
+    role: userRoles.User,
   };
   const result = await prisma.user.create({
     data: userData,

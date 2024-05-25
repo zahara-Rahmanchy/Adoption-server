@@ -38,12 +38,22 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
 
   if (searchTerm) {
     andConditions.push({
-      OR: petSearchFields.map(field => ({
-        [field]: {
-          contains: searchTerm,
-          mode: "insensitive",
-        },
-      })),
+      OR: petSearchFields.map(field => {
+        if (field === "age") {
+          return {
+            [field]: {
+              equals: Number(searchTerm),
+            },
+          };
+        } else {
+          return {
+            [field]: {
+              contains: searchTerm,
+              mode: "insensitive",
+            },
+          };
+        }
+      }),
     });
   }
 

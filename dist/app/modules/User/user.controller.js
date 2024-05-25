@@ -19,7 +19,7 @@ const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 // creates user in the database
 const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("user controller:", req.body);
+    console.log("user controller:", req);
     const result = yield user_service_1.userServices.createUserService(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,

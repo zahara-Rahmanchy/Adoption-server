@@ -21,6 +21,10 @@ get route to get pet data,here  auth is used to authenticate user so that only
 valid users can access the data
 */
 router.get("/pets", petControllers.getPetData);
+/*
+    get route to fetch pet data bny id ,
+*/
+router.get("/pets/:petId", petControllers.getPetDataById);
 
 /*
     put route to update pet data,here first auth is used to authenticate user 

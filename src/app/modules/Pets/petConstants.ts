@@ -1,8 +1,10 @@
 export const petFilters = [
+  "gender",
   "species",
   "breed",
   "age",
   "size",
+  "specialNeeds",
   "location",
   "searchTerm",
 ];

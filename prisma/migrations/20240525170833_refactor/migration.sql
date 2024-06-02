@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Pets" ALTER COLUMN "image" DROP DEFAULT,
+ALTER COLUMN "gender" DROP DEFAULT;

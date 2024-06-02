@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
-import {Pets, Prisma} from "@prisma/client";
+import {Pets, Prisma, petSize} from "@prisma/client";
 import {petSearchFields, sortByOptions} from "./petConstants";
 import {capitalize} from "./capitalize";
 
@@ -25,9 +25,10 @@ const insertPetDataService = async (data: any) => {
 // shows total data fetched as well
 const getPetDataFromDB = async (params: any, metaOptions: any) => {
   console.log(metaOptions);
+  console.log({params});
   const {limit, page, sortBy, sortOrder} = metaOptions;
-  const {searchTerm, ...filtersOptions} = params;
-  console.log({searchTerm}, {...filtersOptions});
+  const {searchTerm, size, specialNeeds, ...filtersOptions} = params;
+  console.log({searchTerm}, {...filtersOptions}, specialNeeds);
 
   const pageCount = page ? page : 1;
   const dataLimit = limit ? limit : 10;
@@ -36,7 +37,7 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
 
   const andConditions: Prisma.PetsWhereInput[] = [];
 
-  if (searchTerm) {
+  if (searchTerm && searchTerm !== undefined) {
     andConditions.push({
       OR: petSearchFields.map(field => {
         if (field === "age") {
@@ -57,11 +58,37 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
     });
   }
 
+  // since size is enum so is pushed seperately
+  if (size) {
+    andConditions.push({
+      size: {
+        equals: size as petSize,
+      },
+    });
+  }
+  // if (specialNeeds) {
+  //   andConditions.push({
+  //     OR: specialNeeds.map((needs: any) => ({
+  //       specialNeeds: {
+  //         contains: needs,
+  //         mode: "insensitive",
+  //       },
+  //     })),
+  //   });
+  // }
+  if (specialNeeds) {
+    andConditions.push({
+      specialNeeds: {
+        has: specialNeeds,
+      },
+    });
+  }
   if (Object.keys(filtersOptions).length > 0) {
     if ("age" in filtersOptions) {
       filtersOptions.age = Number(filtersOptions.age);
       console.log("got age", filtersOptions.age, filtersOptions);
     }
+
     andConditions.push({
       AND: Object.keys(filtersOptions).map(field => ({
         [field]: {
@@ -90,6 +117,7 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
   });
   console.log(validOptions.toString().toLowerCase());
   const total = await prisma.pets.count({
+    where: whereConditions,
     skip: page && limit ? Number(page - 1) * limit : Number(1 - 1) * 10,
     take: limit ? Number(limit) : 10,
     orderBy:
@@ -101,7 +129,7 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
             [validOptions]: "desc",
           },
   });
-  console.log({result}, {total});
+  // console.log({result}, {total});
 
   const meta = {
     page: Number(pageCount),
@@ -110,6 +138,18 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
   };
 
   return {meta, result};
+};
+
+// get data based on id
+
+const getDataById = async (id: string) => {
+  const result = await prisma.pets.findUnique({
+    where: {
+      id,
+    },
+  });
+  console.log("get service", {result});
+  return result;
 };
 
 // updated pet data based on the peId
@@ -127,5 +167,6 @@ const updatePetInDB = async (id: string, data: Partial<Pets>) => {
 export const petServices = {
   insertPetDataService,
   getPetDataFromDB,
+  getDataById,
   updatePetInDB,
 };

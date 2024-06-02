@@ -44,20 +44,39 @@ const insertPetDataService = (data) => __awaiter(void 0, void 0, void 0, functio
 const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(metaOptions);
     const { limit, page, sortBy, sortOrder } = metaOptions;
-    const { searchTerm } = params, filtersOptions = __rest(params, ["searchTerm"]);
+    const { searchTerm, size } = params, filtersOptions = __rest(params, ["searchTerm", "size"]);
     console.log({ searchTerm }, Object.assign({}, filtersOptions));
     const pageCount = page ? page : 1;
     const dataLimit = limit ? limit : 10;
     const validOptions = sortBy && petConstants_1.sortByOptions.includes(sortBy) ? sortBy : "createdAt";
     const andConditions = [];
-    if (searchTerm) {
+    if (searchTerm && searchTerm !== undefined) {
         andConditions.push({
-            OR: petConstants_1.petSearchFields.map(field => ({
-                [field]: {
-                    contains: searchTerm,
-                    mode: "insensitive",
-                },
-            })),
+            OR: petConstants_1.petSearchFields.map(field => {
+                if (field === "age") {
+                    return {
+                        [field]: {
+                            equals: Number(searchTerm),
+                        },
+                    };
+                }
+                else {
+                    return {
+                        [field]: {
+                            contains: searchTerm,
+                            mode: "insensitive",
+                        },
+                    };
+                }
+            }),
+        });
+    }
+    // since size is enum so is pushed seperately
+    if (size) {
+        andConditions.push({
+            size: {
+                equals: size,
+            },
         });
     }
     if (Object.keys(filtersOptions).length > 0) {

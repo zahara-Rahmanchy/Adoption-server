@@ -42,7 +42,7 @@ const getPetData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     const { meta, result } = data;
     (0, sendResponse_1.default)(res, {
         success: true,
-        statusCode: http_status_1.default.OK,
+        statusCode: 200,
         message: "Pets retrieved successfully",
         meta,
         data: result,

@@ -35,9 +35,20 @@ const getPetData = catchAsync(async (req: request, res: Response) => {
   const {meta, result} = data;
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.OK,
+    statusCode: 200,
     message: "Pets retrieved successfully",
     meta,
+    data: result,
+  });
+});
+
+// get data by pet id
+const getPetDataById = catchAsync(async (req: request, res: Response) => {
+  const result = await petServices.getDataById(req.params.petId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Pet data retrieved successfully",
     data: result,
   });
 });
@@ -59,4 +70,5 @@ export const petControllers = {
   insertPetData,
   getPetData,
   updatePetData,
+  getPetDataById,
 };

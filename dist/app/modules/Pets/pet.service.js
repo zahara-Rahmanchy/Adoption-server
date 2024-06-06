@@ -43,9 +43,10 @@ const insertPetDataService = (data) => __awaiter(void 0, void 0, void 0, functio
 // shows total data fetched as well
 const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(metaOptions);
+    console.log({ params });
     const { limit, page, sortBy, sortOrder } = metaOptions;
-    const { searchTerm, size } = params, filtersOptions = __rest(params, ["searchTerm", "size"]);
-    console.log({ searchTerm }, Object.assign({}, filtersOptions));
+    const { searchTerm, size, specialNeeds } = params, filtersOptions = __rest(params, ["searchTerm", "size", "specialNeeds"]);
+    console.log({ searchTerm }, Object.assign({}, filtersOptions), specialNeeds);
     const pageCount = page ? page : 1;
     const dataLimit = limit ? limit : 10;
     const validOptions = sortBy && petConstants_1.sortByOptions.includes(sortBy) ? sortBy : "createdAt";
@@ -76,6 +77,13 @@ const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void
         andConditions.push({
             size: {
                 equals: size,
+            },
+        });
+    }
+    if (specialNeeds) {
+        andConditions.push({
+            specialNeeds: {
+                has: specialNeeds,
             },
         });
     }
@@ -110,6 +118,7 @@ const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void
     });
     console.log(validOptions.toString().toLowerCase());
     const total = yield prisma_1.default.pets.count({
+        where: whereConditions,
         skip: page && limit ? Number(page - 1) * limit : Number(1 - 1) * 10,
         take: limit ? Number(limit) : 10,
         orderBy: sortBy && sortOrder
@@ -120,13 +129,23 @@ const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void
                 [validOptions]: "desc",
             },
     });
-    console.log({ result }, { total });
+    // console.log({result}, {total});
     const meta = {
         page: Number(pageCount),
         limit: Number(dataLimit),
         total: total,
     };
     return { meta, result };
+});
+// get data based on id
+const getDataById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.pets.findUnique({
+        where: {
+            id,
+        },
+    });
+    console.log("get service", { result });
+    return result;
 });
 // updated pet data based on the peId
 const updatePetInDB = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -142,5 +161,6 @@ const updatePetInDB = (id, data) => __awaiter(void 0, void 0, void 0, function* 
 exports.petServices = {
     insertPetDataService,
     getPetDataFromDB,
+    getDataById,
     updatePetInDB,
 };

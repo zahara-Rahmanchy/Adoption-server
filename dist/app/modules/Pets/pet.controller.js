@@ -48,6 +48,16 @@ const getPetData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+// get data by pet id
+const getPetDataById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield pet_service_1.petServices.getDataById(req.params.petId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: "Pet data retrieved successfully",
+        data: result,
+    });
+}));
 // updating data in the db based on petId
 const updatePetData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("user controller:", req.body, "id", req.params);
@@ -63,4 +73,5 @@ exports.petControllers = {
     insertPetData,
     getPetData,
     updatePetData,
+    getPetDataById,
 };

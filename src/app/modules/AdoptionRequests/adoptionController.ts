@@ -7,12 +7,12 @@ import {request} from "../../../middlewares/auth";
 
 // insert AdoptionRequests to database along with the current userId received from req.userId
 const insertAdoptionRequests = catchAsync(
-  async (req: request, res: Response) => {
-    console.log("user controller:", req.body, req.userId);
+  async (req: Request, res: Response) => {
+    console.log("adopt controller:", req.body, req.user);
 
     const result = await adoptionServices.insertAdoptionRequestsToDB(
       req.body,
-      String(req.userId)
+      String(req.user?.id)
     );
 
     sendResponse(res, {
@@ -25,7 +25,7 @@ const insertAdoptionRequests = catchAsync(
 );
 
 // get AdoptionRequests from database
-const getAdoptionRequests = catchAsync(async (req: request, res: Response) => {
+const getAdoptionRequests = catchAsync(async (req: Request, res: Response) => {
   const result = await adoptionServices.getAdoptionRequestsFromDB();
 
   sendResponse(res, {
@@ -54,8 +54,30 @@ const updateAdoptionRequests = catchAsync(
     });
   }
 );
+
+// get Adopted pets from database
+const getAdoptedPets = catchAsync(async (req: Request, res: Response) => {
+  const result = await adoptionServices.getAdoptedPetsFromDB(
+    String(req?.user?.id)
+  );
+  if (result.length === 0) {
+    return sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "No Adopted Pets Found",
+      data: result,
+    });
+  }
+  return sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Adopted Pets retrieved successfully",
+    data: result,
+  });
+});
 export const adoptionRequestController = {
   insertAdoptionRequests,
   getAdoptionRequests,
   updateAdoptionRequests,
+  getAdoptedPets,
 };

@@ -1,8 +1,10 @@
-import {ErrorRequestHandler, NextFunction, Request, Response} from "express";
+import e, {ErrorRequestHandler, NextFunction, Request, Response} from "express";
 import httpStatus from "http-status";
 import {ZodError, ZodIssue} from "zod";
 import ApiError from "../app/erros/ApiError";
-type ErrorResponse = {
+import {PrismaClientKnownRequestError} from "@prisma/client/runtime/library";
+import {Prisma} from "@prisma/client";
+export type ErrorResponse = {
   success: boolean;
   statusCode: number;
   message: string;
@@ -21,7 +23,21 @@ const globalErrorHandler: ErrorRequestHandler = (
     message: err.message,
     errorDetails: err,
   };
+  console.log("status code: ", errorResponse.statusCode);
 
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    console.log("err prisma: ", err.code);
+    if (err.code === "P2025") {
+      errorResponse.statusCode = httpStatus.NOT_FOUND;
+      console.log(errorResponse.statusCode);
+      errorResponse.message = (err.meta?.cause as string) || " No User found!";
+      errorResponse.errorDetails = {
+        issues: "",
+      };
+    }
+    console.log("outside prisma if", errorResponse.statusCode);
+  }
+  console.log("outside prisma if", errorResponse.statusCode);
   if (err instanceof ZodError) {
     const errorSources = err.issues.map((issue: ZodIssue) => {
       return {
@@ -46,6 +62,11 @@ const globalErrorHandler: ErrorRequestHandler = (
     errorResponse.statusCode = err.status;
     errorResponse.message = err.message;
     errorResponse.errorDetails = err;
+  }
+  console.log(errorResponse);
+
+  if(!errorResponse.statusCode){
+    errorResponse.statusCode=httpStatus.INTERNAL_SERVER_ERROR
   }
   return res.status(errorResponse.statusCode).json({
     success: false,

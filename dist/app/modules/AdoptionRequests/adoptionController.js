@@ -19,8 +19,9 @@ const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const adoptionSevices_1 = require("./adoptionSevices");
 // insert AdoptionRequests to database along with the current userId received from req.userId
 const insertAdoptionRequests = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("user controller:", req.body, req.userId);
-    const result = yield adoptionSevices_1.adoptionServices.insertAdoptionRequestsToDB(req.body, String(req.userId));
+    var _a;
+    console.log("adopt controller:", req.body, req.user);
+    const result = yield adoptionSevices_1.adoptionServices.insertAdoptionRequestsToDB(req.body, String((_a = req.user) === null || _a === void 0 ? void 0 : _a.id));
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,
@@ -49,8 +50,28 @@ const updateAdoptionRequests = (0, catchAsync_1.default)((req, res) => __awaiter
         data: result,
     });
 }));
+// get Adopted pets from database
+const getAdoptedPets = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const result = yield adoptionSevices_1.adoptionServices.getAdoptedPetsFromDB(String((_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.id));
+    if (result.length === 0) {
+        return (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: http_status_1.default.OK,
+            message: "No Adopted Pets Found",
+            data: result,
+        });
+    }
+    return (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Adopted Pets retrieved successfully",
+        data: result,
+    });
+}));
 exports.adoptionRequestController = {
     insertAdoptionRequests,
     getAdoptionRequests,
     updateAdoptionRequests,
+    getAdoptedPets,
 };

@@ -7,6 +7,7 @@ exports.petFilters = [
     "breed",
     "age",
     "size",
+    "specialNeeds",
     "location",
     "searchTerm",
 ];

@@ -9,20 +9,25 @@ const pet_controller_1 = require("./pet.controller");
 const auth_1 = __importDefault(require("../../../middlewares/auth"));
 const validateRequest_1 = __importDefault(require("../../../middlewares/validateRequest"));
 const pet_validation_1 = require("./pet.validation");
+const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
 /*
 post route to add pet data,here first auth is used to authenticate user
 and then req body is validated using zod schema
 */
-router.post("/pets", (0, auth_1.default)(), (0, validateRequest_1.default)(pet_validation_1.petValidationSchema.petValidationToInsert), pet_controller_1.petControllers.insertPetData);
+router.post("/pets", (0, auth_1.default)(client_1.userRoles.Admin), (0, validateRequest_1.default)(pet_validation_1.petValidationSchema.petValidationToInsert), pet_controller_1.petControllers.insertPetData);
 /*
 get route to get pet data,here  auth is used to authenticate user so that only
 valid users can access the data
 */
 router.get("/pets", pet_controller_1.petControllers.getPetData);
 /*
+    get route to fetch pet data bny id ,
+*/
+router.get("/pets/:petId", (0, auth_1.default)(client_1.userRoles.Admin, client_1.userRoles.User), pet_controller_1.petControllers.getPetDataById);
+/*
     put route to update pet data,here first auth is used to authenticate user
     and then req body is validated using zod schema to ensure the valid fields
 */
-router.put("/pets/:petId", (0, auth_1.default)(), (0, validateRequest_1.default)(pet_validation_1.petValidationSchema.petValidationToUpdate), pet_controller_1.petControllers.updatePetData);
+router.put("/pets/:petId", (0, auth_1.default)(client_1.userRoles.Admin), (0, validateRequest_1.default)(pet_validation_1.petValidationSchema.petValidationToUpdate), pet_controller_1.petControllers.updatePetData);
 exports.petRoutes = router;

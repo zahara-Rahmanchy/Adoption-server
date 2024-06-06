@@ -1,10 +1,20 @@
-import {AdoptionRequest} from "@prisma/client";
+import {AdoptedStatus, AdoptionRequest, AdoptionStatus} from "@prisma/client";
 import prisma from "../../../shared/prisma";
+import ApiError from "../../erros/ApiError";
+import httpStatus from "http-status";
 
 // service to insert adoption requests data to the database along with the current user id
 const insertAdoptionRequestsToDB = async (data: any, id: string) => {
   console.log("data: ", data, "\n", "id:", id);
+  const isUserExists = await prisma.user.findFirst({
+    where: {
+      id: id,
+    },
+  });
 
+  if (!isUserExists) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User doesn't exists!", "", "");
+  }
   const result = await prisma.adoptionRequest.create({
     data: {
       ...data,
@@ -26,13 +36,60 @@ const updateAdoptionRequestsInDB = async (
   id: string,
   data: Partial<AdoptionRequest>
 ) => {
-  const result = await prisma.adoptionRequest.update({
-    where: {
-      id,
-    },
-    data,
+  console.log("adop updata: ", data);
+  const {status, petId} = data;
+  const adoptData = {
+    status: status,
+  };
+  const petStatus = {
+    adoptedStatus:
+      status === "APPROVED" ? AdoptedStatus.ADOPTED : AdoptedStatus.PENDING,
+  };
+  // const result = await prisma.adoptionRequest.update({
+  //   where: {
+  //     id,
+  //   },
+  //   data,
+  // });
+
+  const result = await prisma.$transaction(async () => {
+    const updateAdoptReq = await prisma.adoptionRequest.update({
+      where: {
+        id,
+      },
+      data: {
+        status: status,
+      },
+    });
+
+    await prisma.pets.update({
+      where: {
+        id: petId,
+      },
+      data: {
+        ...petStatus,
+      },
+    });
+    return updateAdoptReq;
   });
+
   console.log("updated service", {result});
+  return result;
+};
+
+// adopted pets
+const getAdoptedPetsFromDB = async (id: string) => {
+  const result = await prisma.adoptionRequest.findMany({
+    where: {
+      userId: id,
+      status: AdoptionStatus.APPROVED,
+    },
+    include: {
+      pet: true,
+    },
+  });
+
+  console.log("adopted service", {result});
   return result;
 };
 
@@ -40,4 +97,5 @@ export const adoptionServices = {
   insertAdoptionRequestsToDB,
   getAdoptionRequestsFromDB,
   updateAdoptionRequestsInDB,
+  getAdoptedPetsFromDB,
 };

@@ -19,6 +19,7 @@ const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
 // logging user based on the user credentials
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("req: ", req);
     const result = yield auth_service_1.AuthServices.loginUser(req.body);
     console.log({ result });
     (0, sendResponse_1.default)(res, {

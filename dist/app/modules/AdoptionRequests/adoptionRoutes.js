@@ -16,10 +16,15 @@ and then req body is validated using zod schema
 */
 router.post("/adoption-request", (0, auth_1.default)(), (0, validateRequest_1.default)(adoptionValidation_1.adoptionRequestsValidationSchema.adoptionRequestsValidation), adoptionController_1.adoptionRequestController.insertAdoptionRequests);
 /*
-get route to get pet data,here first auth is used to authenticate user
+get route to get adoption-requests data,here first auth is used to authenticate user
 
 */
 router.get("/adoption-requests", (0, auth_1.default)(), adoptionController_1.adoptionRequestController.getAdoptionRequests);
+/**
+ * get route to get adopted pet data,here first auth is used to authenticate user
+
+*/
+router.get("/adopted-pets", (0, auth_1.default)(), adoptionController_1.adoptionRequestController.getAdoptedPets);
 /*
 put route to update adoption status,here first auth is used to authenticate user
 and then req body is validated using zod schema to ensure status field and its enumvalues

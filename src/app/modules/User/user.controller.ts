@@ -19,8 +19,19 @@ const createUser = catchAsync(async (req: request, res: Response) => {
   });
 });
 // gets all the user information
+const getUserProfile = catchAsync(async (req: Request, res: Response) => {
+  const result = await userServices.getUserProfileFromDB(String(req?.user?.id));
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "User profile retrieved successfully",
+    data: result,
+  });
+});
+
 const getUsers = catchAsync(async (req: request, res: Response) => {
-  const result = await userServices.getUsersFromDB(String(req.userId));
+  const result = await userServices.getUsersFromDB();
 
   sendResponse(res, {
     success: true,
@@ -31,11 +42,11 @@ const getUsers = catchAsync(async (req: request, res: Response) => {
 });
 
 // updating user data such as name and email in the db
-const updateUserData = catchAsync(async (req: request, res: Response) => {
+const updateUserData = catchAsync(async (req: Request, res: Response) => {
   console.log("user controller:", req.body, "id", req);
 
   const result = await userServices.updateUserDataInDB(
-    String(req.userId),
+    String(req?.user?.id),
     req.body
   );
 
@@ -49,5 +60,6 @@ const updateUserData = catchAsync(async (req: request, res: Response) => {
 export const userControllers = {
   createUser,
   getUsers,
+  getUserProfile,
   updateUserData,
 };

@@ -29,8 +29,18 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     });
 }));
 // gets all the user information
+const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const result = yield user_service_1.userServices.getUserProfileFromDB(String((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.id));
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.CREATED,
+        message: "User profile retrieved successfully",
+        data: result,
+    });
+}));
 const getUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_service_1.userServices.getUsersFromDB(String(req.userId));
+    const result = yield user_service_1.userServices.getUsersFromDB();
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,
@@ -40,8 +50,9 @@ const getUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 
 }));
 // updating user data such as name and email in the db
 const updateUserData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
     console.log("user controller:", req.body, "id", req);
-    const result = yield user_service_1.userServices.updateUserDataInDB(String(req.userId), req.body);
+    const result = yield user_service_1.userServices.updateUserDataInDB(String((_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.id), req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
@@ -52,5 +63,6 @@ const updateUserData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
 exports.userControllers = {
     createUser,
     getUsers,
+    getUserProfile,
     updateUserData,
 };

@@ -14,6 +14,7 @@ const globalErrorHandler = (err, req, res, next) => {
         message: err.message,
         errorDetails: err,
     };
+    console.log("status code: ", errorResponse.statusCode);
     if (err instanceof zod_1.ZodError) {
         const errorSources = err.issues.map((issue) => {
             return {

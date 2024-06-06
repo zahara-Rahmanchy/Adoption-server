@@ -24,6 +24,7 @@ const loginUser = async (payload: {email: string; password: string}) => {
     {
       id: userData.id,
       email: userData.email,
+      role: userData.role,
     },
     process.env.JWT_SECRET as Secret,
     {
@@ -36,6 +37,7 @@ const loginUser = async (payload: {email: string; password: string}) => {
     id: userData.id,
     name: userData.name,
     email: userData.email,
+    role: userData.role,
     token: accessToken,
   };
   return responseData;

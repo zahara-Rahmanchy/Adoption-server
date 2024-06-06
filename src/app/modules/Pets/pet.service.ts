@@ -66,16 +66,7 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
       },
     });
   }
-  // if (specialNeeds) {
-  //   andConditions.push({
-  //     OR: specialNeeds.map((needs: any) => ({
-  //       specialNeeds: {
-  //         contains: needs,
-  //         mode: "insensitive",
-  //       },
-  //     })),
-  //   });
-  // }
+
   if (specialNeeds) {
     andConditions.push({
       specialNeeds: {
@@ -152,6 +143,30 @@ const getDataById = async (id: string) => {
   return result;
 };
 
+// get pet data along with adoption requests and user information
+const getDetailedDataFromDb = async () => {
+  const result = await prisma.pets.findMany({
+    include: {
+      _count: {
+        select: {
+          adoptionRequest: true,
+        },
+      },
+      adoptionRequest: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              contactNumber: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return result;
+};
 // updated pet data based on the peId
 const updatePetInDB = async (id: string, data: Partial<Pets>) => {
   const result = await prisma.pets.update({
@@ -164,9 +179,22 @@ const updatePetInDB = async (id: string, data: Partial<Pets>) => {
   return result;
 };
 
+// // delete pet data based on the peId
+const deletePetFromDB = async (id: string) => {
+  const result = await prisma.pets.delete({
+    where: {
+      id,
+    },
+  });
+  console.log("deleted service", {result});
+  return result;
+};
+
 export const petServices = {
   insertPetDataService,
   getPetDataFromDB,
   getDataById,
   updatePetInDB,
+  deletePetFromDB,
+  getDetailedDataFromDb,
 };

@@ -55,6 +55,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = jsonwebtoken_1.default.sign({
         id: userData.id,
         email: userData.email,
+        role: userData.role,
     }, process.env.JWT_SECRET, {
         algorithm: "HS256",
         expiresIn: process.env.EXPIRES_In,
@@ -64,6 +65,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         id: userData.id,
         name: userData.name,
         email: userData.email,
+        role: userData.role,
         token: accessToken,
     };
     return responseData;

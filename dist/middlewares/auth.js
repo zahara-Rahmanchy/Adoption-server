@@ -20,7 +20,7 @@ const ApiError_1 = __importDefault(require("../app/erros/ApiError"));
  * verifies the user based on the token
  *
  */
-const auth = () => {
+const auth = (...requiredRoles) => {
     // eslint-disable-next-line no-unused-vars
     return (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("headers", req.headers);
@@ -34,8 +34,11 @@ const auth = () => {
         if (Math.floor(Date.now() / 1000) >= Number(verifiedUser === null || verifiedUser === void 0 ? void 0 : verifiedUser.exp)) {
             throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, "Unauthorized Access", "", "You do not have permission to access");
         }
-        req.userId = verifiedUser.id;
-        console.log({ verifiedUser });
+        req.user = verifiedUser; // role  , userid
+        // role diye guard korar jnno
+        if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
+            throw new ApiError_1.default(http_status_1.default.FORBIDDEN, "Forbidden", "", "This path is forbidden");
+        }
         next();
     }));
 };

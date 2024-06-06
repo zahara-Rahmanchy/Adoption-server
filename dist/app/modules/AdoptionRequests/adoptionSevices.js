@@ -13,10 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.adoptionServices = void 0;
+const client_1 = require("@prisma/client");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
+const ApiError_1 = __importDefault(require("../../erros/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 // service to insert adoption requests data to the database along with the current user id
 const insertAdoptionRequestsToDB = (data, id) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("data: ", data, "\n", "id:", id);
+    const isUserExists = yield prisma_1.default.user.findFirst({
+        where: {
+            id: id,
+        },
+    });
+    if (!isUserExists) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "User doesn't exists!", "", "");
+    }
     const result = yield prisma_1.default.adoptionRequest.create({
         data: Object.assign(Object.assign({}, data), { userId: id }),
     });
@@ -40,8 +51,23 @@ const updateAdoptionRequestsInDB = (id, data) => __awaiter(void 0, void 0, void 
     console.log("updated service", { result });
     return result;
 });
+// adopted pets
+const getAdoptedPetsFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.adoptionRequest.findMany({
+        where: {
+            userId: id,
+            status: client_1.AdoptionStatus.APPROVED,
+        },
+        include: {
+            pet: true,
+        },
+    });
+    console.log("adopted service", { result });
+    return result;
+});
 exports.adoptionServices = {
     insertAdoptionRequestsToDB,
     getAdoptionRequestsFromDB,
     updateAdoptionRequestsInDB,
+    getAdoptedPetsFromDB,
 };

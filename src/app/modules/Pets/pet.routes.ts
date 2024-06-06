@@ -3,6 +3,7 @@ import {petControllers} from "./pet.controller";
 import auth from "../../../middlewares/auth";
 import validateRequest from "../../../middlewares/validateRequest";
 import {petValidationSchema} from "./pet.validation";
+import {userRoles} from "@prisma/client";
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ and then req body is validated using zod schema
 */
 router.post(
   "/pets",
-  auth(),
+  auth(userRoles.Admin),
   validateRequest(petValidationSchema.petValidationToInsert),
   petControllers.insertPetData
 );
@@ -24,7 +25,11 @@ router.get("/pets", petControllers.getPetData);
 /*
     get route to fetch pet data bny id ,
 */
-router.get("/pets/:petId", petControllers.getPetDataById);
+router.get(
+  "/pets/:petId",
+  auth(userRoles.Admin, userRoles.User),
+  petControllers.getPetDataById
+);
 
 /*
     put route to update pet data,here first auth is used to authenticate user 
@@ -32,9 +37,28 @@ router.get("/pets/:petId", petControllers.getPetDataById);
 */
 router.put(
   "/pets/:petId",
-  auth(),
+  auth(userRoles.Admin),
   validateRequest(petValidationSchema.petValidationToUpdate),
   petControllers.updatePetData
 );
 
+/**
+ * route to delete pet data, only admins can
+ */
+router.delete(
+  "/pet/:petId",
+  auth(userRoles.Admin),
+
+  petControllers.deletePetData
+);
+
+/**
+ * route to get pet data, only admins can
+ */
+router.get(
+  "/detailed-pets",
+  auth(userRoles.Admin),
+
+  petControllers.getDetailedData
+);
 export const petRoutes = router;

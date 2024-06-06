@@ -12,9 +12,9 @@ export interface request extends Request {
  * verifies the user based on the token
  *
  */
-const auth = () => {
+const auth = (...requiredRoles: string[]) => {
   // eslint-disable-next-line no-unused-vars
-  return catchAsync(async (req: request, res: Response, next: NextFunction) => {
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     console.log("headers", req.headers);
     const token = req.headers.authorization;
 
@@ -41,8 +41,17 @@ const auth = () => {
         "You do not have permission to access"
       );
     }
-    req.userId = verifiedUser.id;
-    console.log({verifiedUser});
+    req.user = verifiedUser; // role  , userid
+
+    // role diye guard korar jnno
+    if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        "Forbidden",
+        "",
+        "This path is forbidden"
+      );
+    }
     next();
   });
 };

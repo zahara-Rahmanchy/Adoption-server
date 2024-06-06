@@ -66,9 +66,39 @@ const updatePetData = catchAsync(async (req: request, res: Response) => {
     data: result,
   });
 });
+
+// deleting data in the db based on petId
+const deletePetData = catchAsync(async (req: request, res: Response) => {
+  console.log("user controller:", req.body, "id", req.params);
+
+  const result = await petServices.deletePetFromDB(req.params.petId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Pet data deleted successfully",
+    data: result,
+  });
+});
+
+// deleting data in the db based on petId
+const getDetailedData = catchAsync(async (req: request, res: Response) => {
+  console.log("user controller:", req.body, "id", req.params);
+
+  const result = await petServices.getDetailedDataFromDb();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Detailed data fetched successfully",
+    data: result,
+  });
+});
 export const petControllers = {
   insertPetData,
   getPetData,
   updatePetData,
   getPetDataById,
+  deletePetData,
+  getDetailedData,
 };

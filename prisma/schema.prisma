@@ -17,8 +17,10 @@ model User {
   id String @id @unique @default(uuid()) 
   name String
   email String  @unique
+  contactNumber String @default("")
   password String
-  role userRoles @default(User)
+  
+  role userRoles 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   adoptionRequest AdoptionRequest[]
@@ -28,7 +30,7 @@ model User {
 model Pets {
   id String @id @unique @default(uuid()) 
   name String
-  image String
+  image String[]
   species String
   breed String 
   age Int
@@ -39,6 +41,7 @@ model Pets {
   description String
   temperament String
   medicalHistory String
+  adoptedStatus AdoptedStatus @default(PENDING)
   adoptionRequirements String 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,7 +54,7 @@ enum userRoles{
 }
 model AdoptionRequest {
   id String @id @unique @default(uuid()) 
-  userId String @unique
+  userId String 
   petId String
   status AdoptionStatus @default(PENDING) //The status of the adoption request (e.g., PENDING, APPROVED, REJECTED). Default PENDING.
   petOwnershipExperience String
@@ -75,3 +78,7 @@ enum AdoptionStatus{
   REJECTED
 }
 
+enum AdoptedStatus{
+   PENDING
+   ADOPTED
+} 

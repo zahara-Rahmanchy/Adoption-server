@@ -49,7 +49,26 @@ const createUserService = async (data: any) => {
 /***
  * retrieves all the user data from the database
  */
-const getUsersFromDB = async (userId: string) => {
+const getUsersFromDB = async () => {
+  const result = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      // contactNumber: true,
+      createdAt: true,
+      updatedAt: true,
+      password: false,
+    },
+  });
+
+  return result;
+};
+
+/***
+ * retrieves the user data from the database
+ */
+const getUserProfileFromDB = async (userId: string) => {
   const result = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -58,6 +77,7 @@ const getUsersFromDB = async (userId: string) => {
       id: true,
       name: true,
       email: true,
+      contactNumber: true,
       createdAt: true,
       updatedAt: true,
       password: false,
@@ -80,6 +100,7 @@ const updateUserDataInDB = async (id: string, data: Partial<User>) => {
       id: true,
       name: true,
       email: true,
+
       createdAt: true,
       updatedAt: true,
       password: false,
@@ -92,5 +113,6 @@ const updateUserDataInDB = async (id: string, data: Partial<User>) => {
 export const userServices = {
   createUserService,
   getUsersFromDB,
+  getUserProfileFromDB,
   updateUserDataInDB,
 };

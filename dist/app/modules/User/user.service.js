@@ -79,7 +79,24 @@ const createUserService = (data) => __awaiter(void 0, void 0, void 0, function* 
 /***
  * retrieves all the user data from the database
  */
-const getUsersFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+const getUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.user.findMany({
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            // contactNumber: true,
+            createdAt: true,
+            updatedAt: true,
+            password: false,
+        },
+    });
+    return result;
+});
+/***
+ * retrieves the user data from the database
+ */
+const getUserProfileFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.findUnique({
         where: {
             id: userId,
@@ -88,6 +105,7 @@ const getUsersFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* (
             id: true,
             name: true,
             email: true,
+            contactNumber: true,
             createdAt: true,
             updatedAt: true,
             password: false,
@@ -120,5 +138,6 @@ const updateUserDataInDB = (id, data) => __awaiter(void 0, void 0, void 0, funct
 exports.userServices = {
     createUserService,
     getUsersFromDB,
+    getUserProfileFromDB,
     updateUserDataInDB,
 };

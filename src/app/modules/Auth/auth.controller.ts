@@ -5,7 +5,8 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import {request} from "../../../middlewares/auth";
 // logging user based on the user credentials
-const loginUser = catchAsync(async (req: request, res: Response) => {
+const loginUser = catchAsync(async (req: Request, res: Response) => {
+  console.log("req: ", req);
   const result = await AuthServices.loginUser(req.body);
   console.log({result});
   sendResponse(res, {

@@ -15,6 +15,21 @@ const insertAdoptionRequestsToDB = async (data: any, id: string) => {
   if (!isUserExists) {
     throw new ApiError(httpStatus.BAD_REQUEST, "User doesn't exists!", "", "");
   }
+  const isSameRequest = await prisma.adoptionRequest.findFirst({
+    where: {
+      userId: id,
+      petId: data.petId,
+    },
+  });
+  console.log("isSameReq: ", isSameRequest);
+  if (isSameRequest !== null) {
+    throw new ApiError(
+      httpStatus.CONFLICT,
+      "Sorry,You've already made an adoption request for this pet!",
+      "",
+      ""
+    );
+  }
   const result = await prisma.adoptionRequest.create({
     data: {
       ...data,
@@ -41,10 +56,10 @@ const updateAdoptionRequestsInDB = async (
   const adoptData = {
     status: status,
   };
-  const petStatus = {
-    adoptedStatus:
-      status === "APPROVED" ? AdoptedStatus.ADOPTED : AdoptedStatus.PENDING,
-  };
+  const petStatus =
+    status === "APPROVED" ? AdoptedStatus.ADOPTED : AdoptedStatus.PENDING;
+
+  // };
   // const result = await prisma.adoptionRequest.update({
   //   where: {
   //     id,
@@ -52,7 +67,7 @@ const updateAdoptionRequestsInDB = async (
   //   data,
   // });
 
-  const result = await prisma.$transaction(async () => {
+  const result = await prisma.$transaction(async prisma => {
     const updateAdoptReq = await prisma.adoptionRequest.update({
       where: {
         id,
@@ -67,7 +82,7 @@ const updateAdoptionRequestsInDB = async (
         id: petId,
       },
       data: {
-        ...petStatus,
+        adoptedStatus: petStatus,
       },
     });
     return updateAdoptReq;

@@ -24,6 +24,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   adoptionRequest AdoptionRequest[]
+  active Boolean @default(true)
   @@map("users")
 }
 

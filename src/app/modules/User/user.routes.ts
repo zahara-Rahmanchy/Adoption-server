@@ -24,7 +24,11 @@ router.get("/all-users", auth(userRoles.Admin), userControllers.getUsers);
 
 /* get route to get user profile where auth middleware is used to ensure
 only authenticated users can access*/
-router.get("/profile", auth(userRoles.User), userControllers.getUserProfile);
+router.get(
+  "/profile",
+  auth(userRoles.User, userRoles.Admin),
+  userControllers.getUserProfile
+);
 
 /*r
 pute to update user profile using userId from request after ensuring valid user

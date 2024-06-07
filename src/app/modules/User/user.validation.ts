@@ -1,3 +1,4 @@
+import {userRoles} from "@prisma/client";
 import {z} from "zod";
 
 const userValidation = z.object({
@@ -13,8 +14,11 @@ const userValidation = z.object({
 const userUpdateValidation = z.object({
   body: z
     .object({
+      id: z.string().optional(),
       name: z.string().optional(),
       email: z.string().email().optional(),
+      role: z.enum([userRoles.Admin, userRoles.User]).optional(),
+      active: z.boolean().optional(),
     })
     .strict(),
 });

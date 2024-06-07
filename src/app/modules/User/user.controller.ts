@@ -44,11 +44,8 @@ const getUsers = catchAsync(async (req: request, res: Response) => {
 // updating user data such as name and email in the db
 const updateUserData = catchAsync(async (req: Request, res: Response) => {
   console.log("user controller:", req.body, "id", req);
-
-  const result = await userServices.updateUserDataInDB(
-    String(req?.user?.id),
-    req.body
-  );
+  const {id, ...rest} = req.body;
+  const result = await userServices.updateUserDataInDB(String(id), rest);
 
   sendResponse(res, {
     success: true,

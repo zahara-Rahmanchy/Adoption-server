@@ -62,6 +62,9 @@ const getUsersFromDB = async () => {
       updatedAt: true,
       password: false,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return result;

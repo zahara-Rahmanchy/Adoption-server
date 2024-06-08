@@ -28,6 +28,16 @@ const insertAdoptionRequestsToDB = (data, id) => __awaiter(void 0, void 0, void 
     if (!isUserExists) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "User doesn't exists!", "", "");
     }
+    const isSameRequest = yield prisma_1.default.adoptionRequest.findFirst({
+        where: {
+            userId: id,
+            petId: data.petId,
+        },
+    });
+    console.log("isSameReq: ", isSameRequest);
+    if (isSameRequest !== null) {
+        throw new ApiError_1.default(http_status_1.default.CONFLICT, "Sorry,You've already made an adoption request for this pet!", "", "");
+    }
     const result = yield prisma_1.default.adoptionRequest.create({
         data: Object.assign(Object.assign({}, data), { userId: id }),
     });
@@ -42,12 +52,38 @@ const getAdoptionRequestsFromDB = () => __awaiter(void 0, void 0, void 0, functi
 });
 // service to update adoption requests status data to the database using request id
 const updateAdoptionRequestsInDB = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.adoptionRequest.update({
-        where: {
-            id,
-        },
-        data,
-    });
+    console.log("adop updata: ", data);
+    const { status, petId } = data;
+    const adoptData = {
+        status: status,
+    };
+    const petStatus = status === "APPROVED" ? client_1.AdoptedStatus.ADOPTED : client_1.AdoptedStatus.PENDING;
+    // };
+    // const result = await prisma.adoptionRequest.update({
+    //   where: {
+    //     id,
+    //   },
+    //   data,
+    // });
+    const result = yield prisma_1.default.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
+        const updateAdoptReq = yield prisma.adoptionRequest.update({
+            where: {
+                id,
+            },
+            data: {
+                status: status,
+            },
+        });
+        yield prisma.pets.update({
+            where: {
+                id: petId,
+            },
+            data: {
+                adoptedStatus: petStatus,
+            },
+        });
+        return updateAdoptReq;
+    }));
     console.log("updated service", { result });
     return result;
 });

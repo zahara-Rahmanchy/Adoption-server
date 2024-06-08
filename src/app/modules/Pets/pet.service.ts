@@ -3,6 +3,8 @@ import prisma from "../../../shared/prisma";
 import {Pets, Prisma, petSize} from "@prisma/client";
 import {petSearchFields, sortByOptions} from "./petConstants";
 import {capitalize} from "./capitalize";
+import {number} from "zod";
+import {equal} from "assert";
 
 // creates pet data in the database
 const insertPetDataService = async (data: any) => {
@@ -36,26 +38,39 @@ const getPetDataFromDB = async (params: any, metaOptions: any) => {
     sortBy && sortByOptions.includes(sortBy) ? sortBy : "createdAt";
 
   const andConditions: Prisma.PetsWhereInput[] = [];
+  const isNum = Number(searchTerm);
+  let petFields: String[] = [];
+  if (searchTerm && searchTerm !== undefined && Number.isNaN(isNum)) {
+    petFields = [...petSearchFields];
+  } else if (searchTerm && searchTerm !== undefined && !Number.isNaN(isNum)) {
+    petFields = ["species", "breed", "location"];
+  }
 
   if (searchTerm && searchTerm !== undefined) {
-    andConditions.push({
-      OR: petSearchFields.map(field => {
-        if (field === "age") {
-          return {
-            [field]: {
-              equals: Number(searchTerm),
-            },
-          };
-        } else {
+    console.log(
+      "isNum",
+      isNum,
+      "!Number.isNaN(isNum):new ",
+      isNaN(Number(searchTerm))
+    );
+    if (!isNaN(Number(searchTerm))) {
+      andConditions.push({
+        age: {
+          equals: Number(searchTerm),
+        },
+      });
+    } else {
+      andConditions.push({
+        OR: petSearchFields.map(field => {
           return {
             [field]: {
               contains: searchTerm,
               mode: "insensitive",
             },
           };
-        }
-      }),
-    });
+        }),
+      });
+    }
   }
 
   // since size is enum so is pushed seperately

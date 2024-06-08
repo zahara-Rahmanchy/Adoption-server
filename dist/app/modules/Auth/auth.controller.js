@@ -29,6 +29,22 @@ const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         data: result,
     });
 }));
+// change password
+const changePasswordOfUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    console.log("hellloooooooooooooooooooooooooooooooooooooooooooo");
+    console.log("req: ", req.body, "user: ", req.user);
+    const data = Object.assign({ email: (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.email }, req.body);
+    const result = yield auth_service_1.AuthServices.changePassword(data);
+    console.log({ result });
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Password changed successfully",
+        data: result,
+    });
+}));
 exports.AuthController = {
     loginUser,
+    changePasswordOfUser,
 };

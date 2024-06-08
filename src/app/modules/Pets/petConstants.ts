@@ -9,6 +9,6 @@ export const petFilters = [
   "searchTerm",
 ];
 
-export const petSearchFields = ["species", "breed", "location", "age"];
+export const petSearchFields = ["species", "breed", "location"];
 
 export const sortByOptions = ["species", "breed", "size"];

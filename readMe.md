@@ -1,4 +1,4 @@
-# Pet Adoption System- PetPals
+# Pet Adoption System- PawFectMatch
 
 ### Tech Stack
 
@@ -10,7 +10,7 @@
 
 ### Description & Features
 
-    - The Pet Adoption System:PetPals is an application which helps adoption process
+    - The Pet Adoption System:PawFectMatch is an application which helps adoption process
       of animals. It connects users to potential adopters. Users can store pet informations and also can request for pet adoption.
 
     - Users can register using name,email and password.

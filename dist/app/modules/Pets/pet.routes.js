@@ -30,4 +30,12 @@ router.get("/pets/:petId", (0, auth_1.default)(client_1.userRoles.Admin, client_
     and then req body is validated using zod schema to ensure the valid fields
 */
 router.put("/pets/:petId", (0, auth_1.default)(client_1.userRoles.Admin), (0, validateRequest_1.default)(pet_validation_1.petValidationSchema.petValidationToUpdate), pet_controller_1.petControllers.updatePetData);
+/**
+ * route to delete pet data, only admins can
+ */
+router.delete("/pet/:petId", (0, auth_1.default)(client_1.userRoles.Admin), pet_controller_1.petControllers.deletePetData);
+/**
+ * route to get pet data, only admins can
+ */
+router.get("/detailed-pets", (0, auth_1.default)(client_1.userRoles.Admin), pet_controller_1.petControllers.getDetailedData);
 exports.petRoutes = router;

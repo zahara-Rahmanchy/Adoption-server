@@ -69,9 +69,33 @@ const updatePetData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+// deleting data in the db based on petId
+const deletePetData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("user controller:", req.body, "id", req.params);
+    const result = yield pet_service_1.petServices.deletePetFromDB(req.params.petId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Pet data deleted successfully",
+        data: result,
+    });
+}));
+// deleting data in the db based on petId
+const getDetailedData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("user controller:", req.body, "id", req.params);
+    const result = yield pet_service_1.petServices.getDetailedDataFromDb();
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Detailed data fetched successfully",
+        data: result,
+    });
+}));
 exports.petControllers = {
     insertPetData,
     getPetData,
     updatePetData,
     getPetDataById,
+    deletePetData,
+    getDetailedData,
 };

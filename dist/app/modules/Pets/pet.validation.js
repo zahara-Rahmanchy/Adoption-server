@@ -8,6 +8,7 @@ const petValidationToInsert = zod_1.z.object({
     name: zod_1.z.string({
         required_error: "Name is required",
     }),
+    image: zod_1.z.array(zod_1.z.string()),
     species: zod_1.z.string({
         required_error: "Species is required",
     }),
@@ -27,8 +28,8 @@ const petValidationToInsert = zod_1.z.object({
     temperament: zod_1.z.string({
         required_error: "Temperament is required",
     }),
-    medicalHistory: zod_1.z.string({
-        required_error: "MedicalHistory is required",
+    healthStatus: zod_1.z.string({
+        required_error: "Health Status is required",
     }),
     adoptionRequirements: zod_1.z.string({
         required_error: "AdoptionRequirements is required",
@@ -43,10 +44,11 @@ const petValidationToUpdate = zod_1.z.object({
             required_error: "Name is required",
         })
             .optional(),
+        image: zod_1.z.array(zod_1.z.string()).optional(),
         species: zod_1.z
-            .string({
+            .array(zod_1.z.string({
             required_error: "Species is required",
-        })
+        }))
             .optional(),
         breed: zod_1.z
             .string({
@@ -74,9 +76,9 @@ const petValidationToUpdate = zod_1.z.object({
             required_error: "Temperament is required",
         })
             .optional(),
-        medicalHistory: zod_1.z
+        healthStatus: zod_1.z
             .string({
-            required_error: "MedicalHistory is required",
+            required_error: "Health Status is required",
         })
             .optional(),
         adoptionRequirements: zod_1.z

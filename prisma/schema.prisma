@@ -41,7 +41,7 @@ model Pets {
   location String
   description String
   temperament String
-  medicalHistory String
+  healthStatus String
   adoptedStatus AdoptedStatus @default(PENDING)
   adoptionRequirements String 
   createdAt DateTime @default(now())

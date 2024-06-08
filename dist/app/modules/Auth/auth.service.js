@@ -40,6 +40,8 @@ exports.AuthServices = void 0;
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const bcrypt = __importStar(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const ApiError_1 = __importDefault(require("../../erros/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 /* while logging first comparing the passwords and then using jwt to generate token
 to ensure that only logged users can access informations*/
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,6 +50,15 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             email: payload.email,
         },
     });
+    const isActiveUser = yield prisma_1.default.user.findFirst({
+        where: {
+            email: payload.email,
+            active: true,
+        },
+    });
+    if (!isActiveUser) {
+        throw new ApiError_1.default(http_status_1.default.FORBIDDEN, "Sorry,Your account is deactivated!", "", "");
+    }
     const isCorrectPassword = yield bcrypt.compare(payload.password, userData.password);
     if (!isCorrectPassword) {
         throw new Error("Password incorrect!");
@@ -55,6 +66,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = jsonwebtoken_1.default.sign({
         id: userData.id,
         email: userData.email,
+        contact: userData.contactNumber,
         role: userData.role,
     }, process.env.JWT_SECRET, {
         algorithm: "HS256",
@@ -70,6 +82,33 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     };
     return responseData;
 });
+const changePassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const isActiveUser = yield prisma_1.default.user.findFirst({
+        where: {
+            email: payload.email,
+            active: true,
+        },
+    });
+    if (!isActiveUser) {
+        throw new ApiError_1.default(http_status_1.default.FORBIDDEN, "Sorry,You cannot change password!", "", "");
+    }
+    const isCorrectPassword = yield bcrypt.compare(payload.oldPassword, isActiveUser.password);
+    console.log({ isCorrectPassword });
+    if (!isCorrectPassword) {
+        throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, "Old password is incorrect!", "", "");
+    }
+    const hashedPassword = yield bcrypt.hash(String(payload.newPassword), 12);
+    yield prisma_1.default.user.update({
+        where: {
+            id: isActiveUser.id,
+        },
+        data: {
+            password: hashedPassword,
+        },
+    });
+    return "Changed Password";
+});
 exports.AuthServices = {
     loginUser,
+    changePassword,
 };

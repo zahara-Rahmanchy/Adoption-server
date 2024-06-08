@@ -85,10 +85,15 @@ const getUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
             id: true,
             name: true,
             email: true,
-            // contactNumber: true,
+            contactNumber: true,
+            role: true,
+            active: true,
             createdAt: true,
             updatedAt: true,
             password: false,
+        },
+        orderBy: {
+            updatedAt: "desc",
         },
     });
     return result;

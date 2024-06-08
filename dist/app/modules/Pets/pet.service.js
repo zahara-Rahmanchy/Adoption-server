@@ -147,15 +147,72 @@ const getDataById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("get service", { result });
     return result;
 });
+// get pet data along with adoption requests and user information
+const getDetailedDataFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.pets.findMany({
+        include: {
+            _count: {
+                select: {
+                    adoptionRequest: true,
+                },
+            },
+            adoptionRequest: {
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            email: true,
+                            contactNumber: true,
+                        },
+                    },
+                },
+            },
+        },
+        orderBy: {
+            updatedAt: "desc",
+        },
+    });
+    return result;
+});
 // updated pet data based on the peId
 const updatePetInDB = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    const updated = Object.assign({}, data);
+    const isPetPresent = yield prisma_1.default.pets.findFirst({
+        where: {
+            id,
+        },
+        select: {
+            id: true,
+            image: true,
+            specialNeeds: true,
+        },
+    });
+    if (data.image) {
+        updated.image = [...((isPetPresent === null || isPetPresent === void 0 ? void 0 : isPetPresent.image) || []), ...data.image];
+    }
+    if (data.specialNeeds) {
+        updated.specialNeeds = [
+            ...((isPetPresent === null || isPetPresent === void 0 ? void 0 : isPetPresent.specialNeeds) || []),
+            ...data.specialNeeds,
+        ];
+    }
     const result = yield prisma_1.default.pets.update({
         where: {
             id,
         },
-        data,
+        data: updated,
     });
     console.log("updated service", { result });
+    return result;
+});
+// // delete pet data based on the peId
+const deletePetFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.pets.delete({
+        where: {
+            id,
+        },
+    });
+    console.log("deleted service", { result });
     return result;
 });
 exports.petServices = {
@@ -163,4 +220,6 @@ exports.petServices = {
     getPetDataFromDB,
     getDataById,
     updatePetInDB,
+    deletePetFromDB,
+    getDetailedDataFromDb,
 };

@@ -21,7 +21,7 @@ only authenticated users can access*/
 router.get("/all-users", (0, auth_1.default)(client_1.userRoles.Admin), user_controller_1.userControllers.getUsers);
 /* get route to get user profile where auth middleware is used to ensure
 only authenticated users can access*/
-router.get("/profile", (0, auth_1.default)(client_1.userRoles.User), user_controller_1.userControllers.getUserProfile);
+router.get("/profile", (0, auth_1.default)(client_1.userRoles.User, client_1.userRoles.Admin), user_controller_1.userControllers.getUserProfile);
 /*r
 pute to update user profile using userId from request after ensuring valid user
 through auth middleware and then validating the req body using zod scheme

@@ -12,6 +12,7 @@ const adoptionRequestsValidation = zod_1.z.object({
 const updateAdoptionStatus = zod_1.z.object({
     body: zod_1.z
         .object({
+        petId: zod_1.z.string({ required_error: "Pet Id Field value is required" }),
         status: zod_1.z.enum([
             client_1.AdoptionStatus.APPROVED,
             client_1.AdoptionStatus.PENDING,

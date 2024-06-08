@@ -25,8 +25,8 @@ const petValidationToInsert = z.object({
   temperament: z.string({
     required_error: "Temperament is required",
   }),
-  medicalHistory: z.string({
-    required_error: "MedicalHistory is required",
+  healthStatus: z.string({
+    required_error: "Health Status is required",
   }),
   adoptionRequirements: z.string({
     required_error: "AdoptionRequirements is required",
@@ -75,9 +75,9 @@ const petValidationToUpdate = z.object({
           required_error: "Temperament is required",
         })
         .optional(),
-      medicalHistory: z
+      healthStatus: z
         .string({
-          required_error: "MedicalHistory is required",
+          required_error: "Health Status is required",
         })
         .optional(),
       adoptionRequirements: z

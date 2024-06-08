@@ -51,26 +51,35 @@ const getPetDataFromDB = (params, metaOptions) => __awaiter(void 0, void 0, void
     const dataLimit = limit ? limit : 10;
     const validOptions = sortBy && petConstants_1.sortByOptions.includes(sortBy) ? sortBy : "createdAt";
     const andConditions = [];
+    const isNum = Number(searchTerm);
+    let petFields = [];
+    if (searchTerm && searchTerm !== undefined && Number.isNaN(isNum)) {
+        petFields = [...petConstants_1.petSearchFields];
+    }
+    else if (searchTerm && searchTerm !== undefined && !Number.isNaN(isNum)) {
+        petFields = ["species", "breed", "location"];
+    }
     if (searchTerm && searchTerm !== undefined) {
-        andConditions.push({
-            OR: petConstants_1.petSearchFields.map(field => {
-                if (field === "age") {
-                    return {
-                        [field]: {
-                            equals: Number(searchTerm),
-                        },
-                    };
-                }
-                else {
+        console.log("isNum", isNum, "!Number.isNaN(isNum):new ", isNaN(Number(searchTerm)));
+        if (!isNaN(Number(searchTerm))) {
+            andConditions.push({
+                age: {
+                    equals: Number(searchTerm),
+                },
+            });
+        }
+        else {
+            andConditions.push({
+                OR: petConstants_1.petSearchFields.map(field => {
                     return {
                         [field]: {
                             contains: searchTerm,
                             mode: "insensitive",
                         },
                     };
-                }
-            }),
-        });
+                }),
+            });
+        }
     }
     // since size is enum so is pushed seperately
     if (size) {

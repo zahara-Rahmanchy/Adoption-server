@@ -11,5 +11,5 @@ exports.petFilters = [
     "location",
     "searchTerm",
 ];
-exports.petSearchFields = ["species", "breed", "location", "age"];
+exports.petSearchFields = ["species", "breed", "location"];
 exports.sortByOptions = ["species", "breed", "size"];

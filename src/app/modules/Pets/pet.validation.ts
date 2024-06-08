@@ -15,6 +15,9 @@ const petValidationToInsert = z.object({
   age: z.number({
     required_error: "Age is required",
   }),
+  gender: z.string({
+    required_error: "Breed is required",
+  }),
   size: z.enum([petSize.Large, petSize.Medium, petSize.Small]),
   location: z.string({
     required_error: "Location is required",
@@ -43,15 +46,18 @@ const petValidationToUpdate = z.object({
         .optional(),
       image: z.array(z.string()).optional(),
       species: z
-        .array(
-          z.string({
-            required_error: "Species is required",
-          })
-        )
+        .string({
+          required_error: "Species is required",
+        })
         .optional(),
       breed: z
         .string({
           required_error: "Breed is required",
+        })
+        .optional(),
+      gender: z
+        .string({
+          required_error: "Gender is required",
         })
         .optional(),
       age: z

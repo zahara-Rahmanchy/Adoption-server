@@ -164,6 +164,9 @@ const getDetailedDataFromDb = async () => {
         },
       },
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
   return result;
 };

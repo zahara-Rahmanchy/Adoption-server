@@ -169,11 +169,32 @@ const getDetailedDataFromDb = async () => {
 };
 // updated pet data based on the peId
 const updatePetInDB = async (id: string, data: Partial<Pets>) => {
+  const updated = {...data};
+  const isPetPresent = await prisma.pets.findFirst({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      image: true,
+      specialNeeds: true,
+    },
+  });
+
+  if (data.image) {
+    updated.image = [...(isPetPresent?.image || []), ...data.image];
+  }
+  if (data.specialNeeds) {
+    updated.specialNeeds = [
+      ...(isPetPresent?.specialNeeds || []),
+      ...data.specialNeeds,
+    ];
+  }
   const result = await prisma.pets.update({
     where: {
       id,
     },
-    data,
+    data: updated,
   });
   console.log("updated service", {result});
   return result;

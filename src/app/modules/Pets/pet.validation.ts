@@ -5,6 +5,7 @@ const petValidationToInsert = z.object({
   name: z.string({
     required_error: "Name is required",
   }),
+  image: z.array(z.string()),
   species: z.string({
     required_error: "Species is required",
   }),
@@ -40,10 +41,13 @@ const petValidationToUpdate = z.object({
           required_error: "Name is required",
         })
         .optional(),
+      image: z.array(z.string()).optional(),
       species: z
-        .string({
-          required_error: "Species is required",
-        })
+        .array(
+          z.string({
+            required_error: "Species is required",
+          })
+        )
         .optional(),
       breed: z
         .string({

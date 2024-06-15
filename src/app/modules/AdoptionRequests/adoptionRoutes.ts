@@ -27,6 +27,15 @@ router.get(
   auth(userRoles.Admin),
   adoptionRequestController.getAdoptionRequests
 );
+/**
+ * get route to get user specific adoption requests
+ *
+ */
+router.get(
+  "/my-adoption-requests",
+  auth(userRoles.User),
+  adoptionRequestController.getAdoptionRequestsById
+);
 
 /**
  * get route to get adopted pet data,here first auth is used to authenticate user 

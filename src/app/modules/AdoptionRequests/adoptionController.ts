@@ -36,6 +36,25 @@ const getAdoptionRequests = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/*
+  get adoption request made by specific user
+*/
+const getAdoptionRequestsById = catchAsync(
+  async (req: Request, res: Response) => {
+    console.log("req.user: ", req.user);
+    const result = await adoptionServices.getAdoptionRequestsByIdFromDB(
+      String(req.user?.id)
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Adoption requests retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 // updating adoption data in the db based on the requestId
 const updateAdoptionRequests = catchAsync(
   async (req: request, res: Response) => {
@@ -80,4 +99,5 @@ export const adoptionRequestController = {
   getAdoptionRequests,
   updateAdoptionRequests,
   getAdoptedPets,
+  getAdoptionRequestsById,
 };

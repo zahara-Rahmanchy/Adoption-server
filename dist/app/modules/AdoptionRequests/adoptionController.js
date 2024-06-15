@@ -39,6 +39,20 @@ const getAdoptionRequests = (0, catchAsync_1.default)((req, res) => __awaiter(vo
         data: result,
     });
 }));
+/*
+  get adoption request made by specific user
+*/
+const getAdoptionRequestsById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    console.log("req.user: ", req.user);
+    const result = yield adoptionSevices_1.adoptionServices.getAdoptionRequestsByIdFromDB(String((_b = req.user) === null || _b === void 0 ? void 0 : _b.id));
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Adoption requests retrieved successfully",
+        data: result,
+    });
+}));
 // updating adoption data in the db based on the requestId
 const updateAdoptionRequests = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("user controller:", req.body, "id", req.params);
@@ -52,8 +66,8 @@ const updateAdoptionRequests = (0, catchAsync_1.default)((req, res) => __awaiter
 }));
 // get Adopted pets from database
 const getAdoptedPets = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const result = yield adoptionSevices_1.adoptionServices.getAdoptedPetsFromDB(String((_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.id));
+    var _c;
+    const result = yield adoptionSevices_1.adoptionServices.getAdoptedPetsFromDB(String((_c = req === null || req === void 0 ? void 0 : req.user) === null || _c === void 0 ? void 0 : _c.id));
     if (result.length === 0) {
         return (0, sendResponse_1.default)(res, {
             success: true,
@@ -74,4 +88,5 @@ exports.adoptionRequestController = {
     getAdoptionRequests,
     updateAdoptionRequests,
     getAdoptedPets,
+    getAdoptionRequestsById,
 };

@@ -50,6 +50,28 @@ const getAdoptionRequestsFromDB = () => __awaiter(void 0, void 0, void 0, functi
     console.log({ result });
     return result;
 });
+// get adoption request by users
+const getAdoptionRequestsByIdFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUserExists = yield prisma_1.default.user.findFirst({
+        where: {
+            id: id,
+            active: true,
+        },
+    });
+    if (!isUserExists) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "User doesn't exists!", "", "");
+    }
+    const result = yield prisma_1.default.adoptionRequest.findMany({
+        where: {
+            userId: id,
+        },
+        include: {
+            pet: true,
+        },
+    });
+    console.log({ result });
+    return result;
+});
 // service to update adoption requests status data to the database using request id
 const updateAdoptionRequestsInDB = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("adop updata: ", data);
@@ -106,4 +128,5 @@ exports.adoptionServices = {
     getAdoptionRequestsFromDB,
     updateAdoptionRequestsInDB,
     getAdoptedPetsFromDB,
+    getAdoptionRequestsByIdFromDB,
 };

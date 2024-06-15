@@ -46,6 +46,32 @@ const getAdoptionRequestsFromDB = async () => {
   console.log({result});
   return result;
 };
+
+// get adoption request by users
+
+const getAdoptionRequestsByIdFromDB = async (id: string) => {
+  const isUserExists = await prisma.user.findFirst({
+    where: {
+      id: id,
+      active: true,
+    },
+  });
+
+  if (!isUserExists) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User doesn't exists!", "", "");
+  }
+  const result = await prisma.adoptionRequest.findMany({
+    where: {
+      userId: id,
+    },
+    include: {
+      pet: true,
+    },
+  });
+  console.log({result});
+  return result;
+};
+
 // service to update adoption requests status data to the database using request id
 const updateAdoptionRequestsInDB = async (
   id: string,
@@ -113,4 +139,5 @@ export const adoptionServices = {
   getAdoptionRequestsFromDB,
   updateAdoptionRequestsInDB,
   getAdoptedPetsFromDB,
+  getAdoptionRequestsByIdFromDB,
 };

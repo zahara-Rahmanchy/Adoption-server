@@ -22,6 +22,11 @@ get route to get adoption-requests data,here first auth is used to authenticate 
 */
 router.get("/adoption-requests", (0, auth_1.default)(client_1.userRoles.Admin), adoptionController_1.adoptionRequestController.getAdoptionRequests);
 /**
+ * get route to get user specific adoption requests
+ *
+ */
+router.get("/my-adoption-requests", (0, auth_1.default)(client_1.userRoles.User), adoptionController_1.adoptionRequestController.getAdoptionRequestsById);
+/**
  * get route to get adopted pet data,here first auth is used to authenticate user
 
 */
